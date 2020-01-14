@@ -1,0 +1,3 @@
+[submodule "modules/image-processor-base"]
+	path = modules/image-processor-base
+	url = git@github.com:icaroalvarez/image-processor-base.git
