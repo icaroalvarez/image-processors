@@ -3,14 +3,15 @@
 #include "Roi.h"
 
 RoiProcessor::RoiProcessor()
+:ImageProcessor("roi")
 {
-    getConfiguration().addIntParameter("top_left_x", 116, 0, 9999);
+    getConfiguration().addIntParameter("top_left_x", 50, 0, 9999);
     getConfiguration().addIntParameter("top_left_y", 60, 0, 9999);
     getConfiguration().addIntParameter("width", 127, 0, 9999);
     getConfiguration().addIntParameter("height", 161, 0, 9999);
 }
 
-void RoiProcessor::processImage(cv::Mat image)
+void RoiProcessor::processImage(const cv::Mat &image)
 {
     mosaic.reset();
 

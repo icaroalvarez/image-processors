@@ -13,7 +13,8 @@ target_link_libraries(test_image_processors
         image_processors)
 
 target_include_directories(test_image_processors PRIVATE
-        ../src)
+        ../src
+        ../modules/panoramix/src)
 
 target_compile_definitions(test_image_processors
         PRIVATE fixtures_path="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/"
