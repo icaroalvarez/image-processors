@@ -6,7 +6,7 @@
 class RoiProcessor: public ImageProcessor {
 public:
     RoiProcessor();
-    void processImage(const cv::Mat &image) override;
+    cv::Mat processImage(const cv::Mat &image) override;
 private:
     Mosaic mosaic;
 };

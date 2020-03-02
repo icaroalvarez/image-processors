@@ -6,20 +6,21 @@
 ResizeImage::ResizeImage()
 :ImageProcessor("resize")
 {
-    getConfiguration().addFloatParameter("factor_x", 0.3, 0.1, 1.0, 0.1, 1);
-    getConfiguration().addFloatParameter("factor_y", 0.3, 0.1, 1.0, 0.1, 1);
-    getConfiguration().addOptionsParameter("interpol_mode", {"linear", "cubic", "area", "landzos4"}, 1);
+    getParameters().registerParameter("factor_x",
+            DecimalParameter{0.3, 0.1, 1.0, 0.1, 1});
+    getParameters().registerParameter("factor_y",
+            DecimalParameter{0.3, 0.1, 1.0, 0.1, 1});
+    getParameters().registerParameter("interpol_mode",
+            OptionsParameter{1, {"linear", "cubic", "area", "landzos4"}});
 }
 
-void ResizeImage::processImage(const cv::Mat &image)
+cv::Mat ResizeImage::processImage(const cv::Mat &image)
 {
-    float factorX = getConfiguration().getFloatParameter("factor_x");
-    float factorY = getConfiguration().getFloatParameter("factor_y");
+    const auto factorX{getParameters().getParameterValue<double>("factor_x")};
+    const auto factorY{getParameters().getParameterValue<double>("factor_y")};
+    const auto interpolation_mode{getParameters().getParameterValue<SelectedOptionIndex>("interpol_mode")};
     cv::Mat resized;
-
-    int interpolation_mode = getConfiguration().getOptionsParameterIndex("interpol_mode");
-
     cv::resize(image, resized, cv::Size(), factorX, factorY, interpolation_mode);
-    setPostProcessedImage(resized);
     setDebugImage(resized);
+    return resized;
 }

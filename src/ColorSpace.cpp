@@ -4,10 +4,11 @@
 ColorSpace::ColorSpace()
 :ImageProcessor("color_space")
 {
-    getConfiguration().addOptionsParameter("output", {"hls_l_channel"}, 0);
+    getParameters().registerParameter("output",
+            OptionsParameter{0, {"hls_l_channel"}});
 }
 
-void ColorSpace::processImage(const cv::Mat& image)
+cv::Mat ColorSpace::processImage(const cv::Mat& image)
 {
     if(image.channels() < 3)
     {
@@ -15,14 +16,12 @@ void ColorSpace::processImage(const cv::Mat& image)
     }
     mosaic.reset();
 
-    // rgb
     std::vector<cv::Mat> bgr_channels;
     cv::split(image, bgr_channels);
     mosaic.addImage(bgr_channels.at(2), 0, 0, "R");
     mosaic.addImage(bgr_channels.at(1), 1, 0, "G");
     mosaic.addImage(bgr_channels.at(0), 2, 0, "B");
 
-    // hsv
     cv::Mat hsv;
     cv::cvtColor(image, hsv, CV_BGR2HSV);
     std::vector<cv::Mat> hsv_channels;
@@ -31,7 +30,6 @@ void ColorSpace::processImage(const cv::Mat& image)
     mosaic.addImage(hsv_channels.at(1), 1, 1, "S");
     mosaic.addImage(hsv_channels.at(2), 2, 1, "V");
 
-    // hsl
     cv::Mat hls;
     cv::cvtColor(image, hls, CV_BGR2HLS);
     std::vector<cv::Mat> hls_channels;
@@ -40,7 +38,6 @@ void ColorSpace::processImage(const cv::Mat& image)
     mosaic.addImage(hls_channels.at(1), 1, 2, "L");
     mosaic.addImage(hls_channels.at(2), 2, 2, "S");
 
-    // lab
     cv::Mat lab;
     cv::cvtColor(image, lab, CV_BGR2Lab);
     std::vector<cv::Mat> lab_channels;
@@ -49,12 +46,12 @@ void ColorSpace::processImage(const cv::Mat& image)
     mosaic.addImage(lab_channels.at(1), 1, 3, "A");
     mosaic.addImage(lab_channels.at(2), 2, 3, "B");
 
-
     setDebugImage(mosaic.createMosaic());
-    setPostProcessedImage(mosaic.createMosaic());
 
-    if(getConfiguration().getOptionsParameter("output") == "hls_l_channel")
+    cv::Mat outputImage{image};
+    if(getParameters().getParameterValue<SelectedOptionIndex>("output") == 0)
     {
-        setPostProcessedImage(hls_channels.at(1));
+        outputImage = hls_channels.at(1);
     }
+    return outputImage;
 }

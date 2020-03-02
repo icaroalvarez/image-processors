@@ -17,7 +17,6 @@ target_link_libraries(image_processors PRIVATE
         panoramix
         opencv_core)
 
-target_include_directories(image_processors PRIVATE
+target_include_directories(image_processors PUBLIC
         ../src
-        ../modules/panoramix/src
         )

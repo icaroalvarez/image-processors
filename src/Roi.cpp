@@ -5,27 +5,26 @@
 RoiProcessor::RoiProcessor()
 :ImageProcessor("roi")
 {
-    getConfiguration().addIntParameter("top_left_x", 50, 0, 9999);
-    getConfiguration().addIntParameter("top_left_y", 60, 0, 9999);
-    getConfiguration().addIntParameter("width", 127, 0, 9999);
-    getConfiguration().addIntParameter("height", 161, 0, 9999);
+    getParameters().registerParameter("top_left_x", IntegerParameter{50, 0, 9999});
+    getParameters().registerParameter("top_left_y", IntegerParameter{60, 0, 9999});
+    getParameters().registerParameter("width", IntegerParameter{127, 0, 9999});
+    getParameters().registerParameter("height", IntegerParameter{161, 0, 9999});
 }
 
-void RoiProcessor::processImage(const cv::Mat &image)
+cv::Mat RoiProcessor::processImage(const cv::Mat &image)
 {
     mosaic.reset();
 
-    // x value
-    int xValue = MAX(0, getConfiguration().getIntParameter("top_left_x"));
+    auto xValue = MAX(0, getParameters().getParameterValue<int>("top_left_x"));
     xValue = MIN(xValue, image.cols-1);
-    // y value
-    int yValue = MAX(0, getConfiguration().getIntParameter("top_left_y"));
+
+    auto yValue = MAX(0, getParameters().getParameterValue<int>("top_left_y"));
     yValue = MIN(yValue, image.rows-1);
-    // width value
-    int width = MAX(0,  getConfiguration().getIntParameter("width"));
+
+    auto width = MAX(0, getParameters().getParameterValue<int>("width"));
     width = MIN(width, image.cols-xValue);
-    // height value
-    int height = MAX(0,  getConfiguration().getIntParameter("height"));
+
+    auto height = MAX(0, getParameters().getParameterValue<int>("height"));
     height = MIN(height, image.rows-yValue);
 
     cv::Mat debugImage;
@@ -42,6 +41,6 @@ void RoiProcessor::processImage(const cv::Mat &image)
     cv::Mat outputResized;
     cv::resize(outputImage, outputResized, image.size());
     mosaic.addImage(outputResized, 1, 0);
-    setPostProcessedImage(outputImage);
     setDebugImage(mosaic.createMosaic());
+    return outputImage;
 }

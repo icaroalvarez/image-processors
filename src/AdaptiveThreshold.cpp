@@ -1,16 +1,12 @@
-//
-// Created by ialvarez on 9/03/18.
-//
-
 #include <opencv2/imgproc.hpp>
 #include "AdaptiveThreshold.h"
 
 AdaptiveThreshold::AdaptiveThreshold()
 :ImageProcessor("adaptive_threshold")
 {
-    getConfiguration().addIntParameter("block_size", 10, 1, 999);
-    getConfiguration().addIntParameter("c_mean", -10, -999, 999);
-    getConfiguration().addOptionsParameter("adaptive_method", {"mean", "gaussian"}, 0);
+    getParameters().registerParameter("block_size", IntegerParameter{10, 1, 999});
+    getParameters().registerParameter("c_mean", IntegerParameter{-10, -999, 999});
+    getParameters().registerParameter("adaptive_method",OptionsParameter{0, {"mean", "gaussian"}});
 }
 
 int makeOdd(int value)
@@ -21,7 +17,7 @@ int makeOdd(int value)
     return value;
 }
 
-void AdaptiveThreshold::processImage(const cv::Mat& image)
+cv::Mat AdaptiveThreshold::processImage(const cv::Mat& image)
 {
     cv::Mat imageGray{image};
     if(image.channels() > 1)
@@ -29,11 +25,11 @@ void AdaptiveThreshold::processImage(const cv::Mat& image)
         cv::cvtColor(image, imageGray, CV_RGB2GRAY);
     }
 
-    int blockSize = makeOdd(getConfiguration().getIntParameter("block_size"));
-    float cMean = getConfiguration().getIntParameter("c_mean");
+    int blockSize = makeOdd(getParameters().getParameterValue<int>("block_size"));
+    auto cMean = static_cast<double>(getParameters().getParameterValue<int>("c_mean"));
 
     int option = cv::ADAPTIVE_THRESH_GAUSSIAN_C;
-    if(getConfiguration().getOptionsParameter("adaptive_method") == "mean")
+    if(getParameters().getParameterValue<SelectedOptionIndex>("adaptive_method") == 0)
     {
         option = cv::ADAPTIVE_THRESH_MEAN_C;
     }
@@ -42,5 +38,5 @@ void AdaptiveThreshold::processImage(const cv::Mat& image)
             cv::THRESH_BINARY, blockSize, cMean);
 
     setDebugImage(outputImage);
-    setPostProcessedImage(outputImage);
+    return outputImage;
 }
