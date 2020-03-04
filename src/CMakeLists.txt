@@ -15,7 +15,9 @@ add_library(image_processors
 
 target_link_libraries(image_processors PRIVATE
         panoramix
-        opencv_core)
+        PUBLIC
+        CONAN_PKG::opencv
+        )
 
 target_include_directories(image_processors PUBLIC
         ../src

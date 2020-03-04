@@ -22,7 +22,7 @@ cv::Mat AdaptiveThreshold::processImage(const cv::Mat& image)
     cv::Mat imageGray{image};
     if(image.channels() > 1)
     {
-        cv::cvtColor(image, imageGray, CV_RGB2GRAY);
+        cv::cvtColor(image, imageGray, cv::COLOR_RGB2GRAY);
     }
 
     int blockSize = makeOdd(getParameters().getParameterValue<int>("block_size"));

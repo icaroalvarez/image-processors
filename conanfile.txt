@@ -1,5 +1,6 @@
 [requires]
 Catch2/2.11.1@catchorg/stable
+opencv/4.1.1@conan/stable
 
 [generators]
 cmake

@@ -23,7 +23,7 @@ cv::Mat ColorSpace::processImage(const cv::Mat& image)
     mosaic.addImage(bgr_channels.at(0), 2, 0, "B");
 
     cv::Mat hsv;
-    cv::cvtColor(image, hsv, CV_BGR2HSV);
+    cv::cvtColor(image, hsv, cv::COLOR_BGR2HSV);
     std::vector<cv::Mat> hsv_channels;
     cv::split(hsv, hsv_channels);
     mosaic.addImage(hsv_channels.at(0), 0, 1, "H");
@@ -31,7 +31,7 @@ cv::Mat ColorSpace::processImage(const cv::Mat& image)
     mosaic.addImage(hsv_channels.at(2), 2, 1, "V");
 
     cv::Mat hls;
-    cv::cvtColor(image, hls, CV_BGR2HLS);
+    cv::cvtColor(image, hls, cv::COLOR_BGR2HLS);
     std::vector<cv::Mat> hls_channels;
     cv::split(hls, hls_channels);
     mosaic.addImage(hls_channels.at(0), 0, 2, "H");
@@ -39,7 +39,7 @@ cv::Mat ColorSpace::processImage(const cv::Mat& image)
     mosaic.addImage(hls_channels.at(2), 2, 2, "S");
 
     cv::Mat lab;
-    cv::cvtColor(image, lab, CV_BGR2Lab);
+    cv::cvtColor(image, lab, cv::COLOR_BGR2Lab);
     std::vector<cv::Mat> lab_channels;
     cv::split(lab, lab_channels);
     mosaic.addImage(lab_channels.at(0), 0, 3, "L");

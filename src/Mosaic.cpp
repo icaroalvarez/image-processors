@@ -17,14 +17,14 @@ cv::Mat Mosaic::createMosaic() const {
         cv::Mat colorImage = piece.image;
         if(colorImage.channels() == 1)
         {
-            cv::cvtColor(colorImage, colorImage, CV_GRAY2BGR);
+            cv::cvtColor(colorImage, colorImage, cv::COLOR_GRAY2BGR);
         }
 
         cv::Rect roi(piece.colIndex*colorImage.cols, piece.rowIndex*colorImage.rows,
                 colorImage.cols, colorImage.rows);
         colorImage.copyTo(mosaic(roi));
 
-        int font = CV_FONT_HERSHEY_COMPLEX_SMALL;  //defining font
+        int font = cv::FONT_HERSHEY_COMPLEX_SMALL;  //defining font
         int bottom;
         cv::Size textSize = cv::getTextSize(piece.name, font, 1.0, 1, &bottom);
         double scale = (static_cast<double>(piece.image.rows)/10.0) /static_cast<double>(textSize.height);

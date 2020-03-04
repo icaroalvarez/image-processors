@@ -10,11 +10,8 @@ add_executable(test_image_processors
         )
 
 target_link_libraries(test_image_processors
-        image_processors)
-
-target_include_directories(test_image_processors PRIVATE
-        ../src
-        ../modules/panoramix/src)
+        PRIVATE image_processors CONAN_PKG::Catch2
+        )
 
 target_compile_definitions(test_image_processors
         PRIVATE fixtures_path="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/"
