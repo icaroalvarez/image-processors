@@ -5,5 +5,5 @@
 class Registerer
 {
 public:
-    static void registerProcessors(PipelineController& pipelineController);
+    static void registerProcessors(const std::shared_ptr<PipelineController>& pipelineController);
 };

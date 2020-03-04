@@ -5,11 +5,11 @@
 #include "Convolution.h"
 #include "AdaptiveThreshold.h"
 
-void Registerer::registerProcessors(PipelineController &controller)
+void Registerer::registerProcessors(const std::shared_ptr<PipelineController>& controller)
 {
-    controller.registerImageProcessor<ResizeImage>("resize");
-    controller.registerImageProcessor<RoiProcessor>("roi");
-    controller.registerImageProcessor<ColorSpace>("color_space");
-    controller.registerImageProcessor<Convolution>("convolution");
-    controller.registerImageProcessor<AdaptiveThreshold>("adaptive_threshold");
+    controller->registerImageProcessor<ResizeImage>("resize");
+    controller->registerImageProcessor<RoiProcessor>("roi");
+    controller->registerImageProcessor<ColorSpace>("color_space");
+    controller->registerImageProcessor<Convolution>("convolution");
+    controller->registerImageProcessor<AdaptiveThreshold>("adaptive_threshold");
 }
