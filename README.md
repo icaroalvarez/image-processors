@@ -6,17 +6,13 @@ Collection of Image Processors to be tested using Panoramix.
 
 ### Dependencies managed by conan
 - Catch2
+- OpenCV
 
-Run the following commands for install the dependencies:
+Run the following script for installing the dependencies:
 
 ```bash
-mkdir build && cd build
-conan install ..
+sh conan_install.sh
 ```
-
-### Other dependencies
-Install this dependencies manually in the system: 
-- OpenCV 
 
 ## Building the project
 
@@ -30,3 +26,7 @@ mkdir build && cd build
 cmake ..
 make
 ```
+
+TODO:
+- Add more image processors.
+- Unit testing.
