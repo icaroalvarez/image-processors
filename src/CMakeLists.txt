@@ -5,9 +5,13 @@ set(source_files
         Roi
         Mosaic
         Registerer
-        AdaptiveThreshold
         ColorSpace
-        Convolution)
+        Convolution
+        threshold/AdaptiveThreshold
+        threshold/Percentile
+        threshold/Threshold
+        GaborFilter
+        )
 
 add_library(image_processors
         ${source_files}

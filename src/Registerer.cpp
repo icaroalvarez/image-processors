@@ -3,7 +3,10 @@
 #include "Roi.h"
 #include "ColorSpace.h"
 #include "Convolution.h"
-#include "AdaptiveThreshold.h"
+#include "threshold/AdaptiveThreshold.h"
+#include "threshold/Percentile.h"
+#include "threshold/Threshold.h"
+#include "GaborFilter.h"
 
 void Registerer::registerProcessors(const std::shared_ptr<PipelineController>& controller)
 {
@@ -12,4 +15,7 @@ void Registerer::registerProcessors(const std::shared_ptr<PipelineController>& c
     controller->registerImageProcessor<ColorSpace>("color_space");
     controller->registerImageProcessor<Convolution>("convolution");
     controller->registerImageProcessor<AdaptiveThreshold>("adaptive_threshold");
+    controller->registerImageProcessor<Threshold>("threshold");
+    controller->registerImageProcessor<Percentile>("percentile_threshold");
+    controller->registerImageProcessor<GaborFilter>("gabor_filter");
 }
