@@ -5,42 +5,52 @@
 RoiProcessor::RoiProcessor()
 :ImageProcessor("roi")
 {
-    getParameters().registerParameter("top_left_x", IntegerParameter{50, 0, 9999});
-    getParameters().registerParameter("top_left_y", IntegerParameter{60, 0, 9999});
-    getParameters().registerParameter("width", IntegerParameter{127, 0, 9999});
-    getParameters().registerParameter("height", IntegerParameter{161, 0, 9999});
+    getParameters().registerParameter("top_left_x", IntegerParameter{5, 0, std::numeric_limits<int>::max()});
+    getParameters().registerParameter("top_left_y", IntegerParameter{5, 0, std::numeric_limits<int>::max()});
+    getParameters().registerParameter("top_right_x", IntegerParameter{50, 0, std::numeric_limits<int>::max()});
+    getParameters().registerParameter("top_right_y", IntegerParameter{5, 0, std::numeric_limits<int>::max()});
+    getParameters().registerParameter("bottom_left_x", IntegerParameter{5, 0, std::numeric_limits<int>::max()});
+    getParameters().registerParameter("bottom_left_y", IntegerParameter{50, 0, std::numeric_limits<int>::max()});
+    getParameters().registerParameter("bottom_right_x", IntegerParameter{50, 0, std::numeric_limits<int>::max()});
+    getParameters().registerParameter("bottom_right_y", IntegerParameter{50, 0, std::numeric_limits<int>::max()});
+}
+
+int getXValueOrMax(int value, const cv::Size& imageSize)
+{
+    auto xValue = std::max(0, value);
+    xValue = std::min(xValue, imageSize.width-1);
+    return xValue;
+}
+
+int getYValueOrMax(int value, const cv::Size& imageSize)
+{
+    auto yValue = std::max(0, value);
+    yValue = std::min(yValue, imageSize.height-1);
+    return yValue;
 }
 
 cv::Mat RoiProcessor::processImage(const cv::Mat &image)
 {
     mosaic.reset();
 
-    auto xValue = MAX(0, getParameters().getParameterValue<int>("top_left_x"));
-    xValue = MIN(xValue, image.cols-1);
-
-    auto yValue = MAX(0, getParameters().getParameterValue<int>("top_left_y"));
-    yValue = MIN(yValue, image.rows-1);
-
-    auto width = MAX(0, getParameters().getParameterValue<int>("width"));
-    width = MIN(width, image.cols-xValue);
-
-    auto height = MAX(0, getParameters().getParameterValue<int>("height"));
-    height = MIN(height, image.rows-yValue);
-
-    cv::Mat debugImage;
-    if(image.channels() < 3)
-    {
-        cv::cvtColor(image, debugImage, CV_GRAY2BGR);
-    }else{
-        debugImage = image.clone();
-    }
-    cv::rectangle(debugImage, {xValue, yValue, width, height}, {0,255,0});
-    mosaic.addImage(debugImage, 0, 0);
-
-    cv::Mat outputImage = image({xValue, yValue, width, height}).clone();
-    cv::Mat outputResized;
-    cv::resize(outputImage, outputResized, image.size());
-    mosaic.addImage(outputResized, 1, 0);
+    const auto topLeftX{getXValueOrMax(getParameters().getParameterValue<int>("top_left_x"), image.size())};
+    const auto topLeftY{getYValueOrMax(getParameters().getParameterValue<int>("top_left_y"), image.size())};
+    const auto topRightX{getXValueOrMax(getParameters().getParameterValue<int>("top_right_x"), image.size())};
+    const auto topRightY{getYValueOrMax(getParameters().getParameterValue<int>("top_right_y"), image.size())};
+    const auto bottomLeftX{getXValueOrMax(getParameters().getParameterValue<int>("bottom_left_x"), image.size())};
+    const auto bottomLeftY{getYValueOrMax(getParameters().getParameterValue<int>("bottom_left_y"), image.size())};
+    const auto bottomRightX{getXValueOrMax(getParameters().getParameterValue<int>("bottom_right_x"), image.size())};
+    const auto bottomRightY{getYValueOrMax(getParameters().getParameterValue<int>("bottom_right_y"), image.size())};
+    std::vector<cv::Point> points{{topRightX, topRightY}, {bottomRightX, bottomRightY}, {bottomLeftX, bottomLeftY}, {topLeftX, topLeftY}};
+    cv::Mat mask{cv::Mat::zeros(image.size(), CV_8U)};
+    const cv::Scalar whiteColor = cv::Scalar::all(255);
+    constexpr auto contourIndex{-1};
+    const std::vector<std::vector<cv::Point>> contours{{points}};
+    cv::drawContours(mask, contours, contourIndex, whiteColor, cv::FILLED);
+    mosaic.addImage(mask, 0, 0, "mask");
+    cv::Mat output{cv::Mat::zeros(image.size(), image.type())};
+    image.copyTo(output, mask);
+    mosaic.addImage(output, 1, 0, "output");
     setDebugImage(mosaic.createMosaic());
-    return outputImage;
+    return mask;
 }
