@@ -5,7 +5,7 @@ ColorSpace::ColorSpace()
 :ImageProcessor("color_space")
 {
     getParameters().registerParameter("output",
-            OptionsParameter{0, {"hls_l_channel"}});
+            OptionsParameter{0, {"hls_h_channel", "hls_l_channel", "hls_s_channel"}});
 }
 
 cv::Mat ColorSpace::processImage(const cv::Mat& image)
@@ -49,9 +49,16 @@ cv::Mat ColorSpace::processImage(const cv::Mat& image)
     setDebugImage(mosaic.createMosaic());
 
     cv::Mat outputImage{image};
-    if(getParameters().getParameterValue<SelectedOptionIndex>("output") == 0)
+    const auto selectedOption{getParameters().getParameterValue<SelectedOptionIndex>("output")};
+    if(selectedOption == 0)
+    {
+        outputImage = hls_channels.at(0);
+    } else if (selectedOption == 1)
     {
         outputImage = hls_channels.at(1);
+    }else if(selectedOption == 2)
+    {
+        outputImage = hls_channels.at(2);
     }
     return outputImage;
 }

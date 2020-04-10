@@ -52,5 +52,5 @@ cv::Mat RoiProcessor::processImage(const cv::Mat &image)
     image.copyTo(output, mask);
     mosaic.addImage(output, 1, 0, "output");
     setDebugImage(mosaic.createMosaic());
-    return mask;
+    return output;
 }
