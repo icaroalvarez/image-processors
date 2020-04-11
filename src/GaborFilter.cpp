@@ -2,18 +2,23 @@
 #include "GaborFilter.h"
 
 GaborFilter::GaborFilter()
-:ImageProcessor("gabor_filter")
+        :ImageProcessor("gabor_filter")
 {
     getParameters().registerParameter("sigma",
-                                      DecimalParameter{0.04, 0.01, 1.0, 0.01, 2});
+                                      DecimalParameter{0.04, 0.01,
+                                                       1.0, 0.01, 2});
     getParameters().registerParameter("theta",
-                                      DecimalParameter{0.04, 0.01, 1.0, 0.01, 2});
+                                      DecimalParameter{0.04, 0.01,
+                                                       1.0, 0.01, 2});
     getParameters().registerParameter("lambda",
-                                      DecimalParameter{0.04, 0.01, 1.0, 0.01, 2});
+                                      DecimalParameter{0.04, 0.01,
+                                                       1.0, 0.01, 2});
     getParameters().registerParameter("gamma",
-                                      DecimalParameter{0.04, 0.01, 1.0, 0.01, 2});
+                                      DecimalParameter{0.04, 0.01,
+                                                       1.0, 0.01, 2});
     getParameters().registerParameter("psi",
-                                      DecimalParameter{0.04, 0.01, 1.0, 0.01, 2});
+                                      DecimalParameter{0.04, 0.01,
+                                                       1.0, 0.01, 2});
 }
 
 cv::Mat GaborFilter::processImage(const cv::Mat &image)

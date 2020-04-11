@@ -1,10 +1,6 @@
 #include <opencv2/imgproc.hpp>
 #include "Convolution.h"
-
-double degreesToRadians(double degrees)
-{
-    return degrees*CV_PI/180.0;
-}
+#include "Utils.h"
 
 cv::Mat jetColorFrom(const cv::Mat& image)
 {
@@ -67,7 +63,7 @@ cv::Mat Convolution::processImage(const cv::Mat& image)
     mosaic.reset();
     cv::Size size(getParameters().getParameterValue<int>("horizontal_size"),
                   getParameters().getParameterValue<int>("vertical_size"));
-    const auto radians{degreesToRadians(getParameters().getParameterValue<int>("theta_degrees"))};
+    const auto radians{Utils::degreesToRadians(getParameters().getParameterValue<int>("theta_degrees"))};
     const auto sigma_stddev{getParameters().getParameterValue<double>("sigma_stddev")};
     const auto lambda_wavelength{getParameters().getParameterValue<double>("lambda_wavelength")};
     const auto gamma_aspect_ratio{getParameters().getParameterValue<double>("gamma_aspect_ratio")};

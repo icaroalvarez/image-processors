@@ -11,6 +11,9 @@ set(source_files
         threshold/Percentile
         threshold/Threshold
         GaborFilter
+        CannyEdgeDetector
+        HoughLines
+        Utils
         )
 
 add_library(image_processors

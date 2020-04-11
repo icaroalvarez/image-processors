@@ -7,6 +7,8 @@
 #include "threshold/Percentile.h"
 #include "threshold/Threshold.h"
 #include "GaborFilter.h"
+#include "CannyEdgeDetector.h"
+#include "HoughLines.h"
 
 void Registerer::registerProcessors(const std::shared_ptr<PipelineController>& controller)
 {
@@ -18,4 +20,6 @@ void Registerer::registerProcessors(const std::shared_ptr<PipelineController>& c
     controller->registerImageProcessor<Threshold>("threshold");
     controller->registerImageProcessor<Percentile>("percentile_threshold");
     controller->registerImageProcessor<GaborFilter>("gabor_filter");
+    controller->registerImageProcessor<CannyEdgeDetector>("canny_edge_detector");
+    controller->registerImageProcessor<HoughLines>("hough_lines");
 }
