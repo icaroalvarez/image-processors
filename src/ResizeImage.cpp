@@ -1,5 +1,3 @@
-#pragma one
-
 #include <opencv2/imgproc.hpp>
 #include "ResizeImage.h"
 
